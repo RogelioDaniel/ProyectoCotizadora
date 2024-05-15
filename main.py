@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Request, Depends, Form, status
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from database import get_db
 import models
@@ -10,17 +12,25 @@ from starlette.responses import RedirectResponse
 from datetime import datetime
 
 app = FastAPI()
-
+app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 models.Base.metadata.create_all(bind=engine)
 templates = Jinja2Templates("templates")
-
-@app.get("/")
-def home(
+async def homepage(request):
+    return templates.TemplateResponse(request, 'index.html')
+@app.get("/", response_class=HTMLResponse)
+async def home(
         request:Request, 
         db: Session = Depends(get_db),
 ):
     todos = db.query(ToDo).all()
     return templates.TemplateResponse("index.html",{"request":request,"todo_list":todos})
+@app.get("/all_projects", response_class=HTMLResponse)
+async def todo_projects(
+        request:Request, 
+        db: Session = Depends(get_db),
+):
+    todos = db.query(ToDo).all()
+    return templates.TemplateResponse("buttons.html",{"request":request,"todo_list":todos})
 
 @app.get("/employee")
 def page_employee(
@@ -39,7 +49,7 @@ def add(
     price:int = Form(...),
 ):
     add_todo(title,timeMonths,price,db)
-    url = app.url_path_for("home")
+    url = app.url_path_for("todo_projects")
     return RedirectResponse(url,status_code=status.HTTP_303_SEE_OTHER)
 
 @app.post("/add_employee")
@@ -61,7 +71,7 @@ def update(
     db:Session = Depends(get_db)
 ):
     update_todo(todo_id,db)
-    url = app.url_path_for("home")
+    url = app.url_path_for("todo_projects")
     return RedirectResponse(url,status_code=status.HTTP_302_FOUND)
 
 @app.get("/delete/{id}")
@@ -71,7 +81,7 @@ def delete(
     db:Session = Depends(get_db)
 ):
     delete_todo(id,db)
-    url = app.url_path_for("home")
+    url = app.url_path_for("todo_projects")
     return RedirectResponse(url,status_code=status.HTTP_302_FOUND)
 
 
@@ -88,7 +98,7 @@ def time_left(
     todo_left =  todo.deadline - convert_to_stamp
     todo.left_time = todo_left
     db.commit()
-    url = app.url_path_for("home")
+    url = app.url_path_for("todo_projects")
     return RedirectResponse(url,status_code=status.HTTP_302_FOUND)
 
 

@@ -19,7 +19,8 @@
 
     <!-- Custom styles for this template-->
     <link href="/templates/css/sb-admin-2.min.css" rel="stylesheet">
-
+    <link href="/templates/css/style.css" rel="stylesheet">
+    
 </head>
 
 <body id="page-top">
@@ -438,20 +439,185 @@
                                               <div class="card rounded-5 shadow">
                                                 <div class="card-body p-4">
                                                   <h4 class="text-center my-3 pb-3">Python FastAPI Project Prices Calculator</h4>
-                                                  <form class="row g-3" action="/add" method="post">
+                                                  <form id="projectForm" class="row g-3">
                                                     <div class="col-md-2">
-                                                      <input type="text" id="title" name="title" class="form-control" placeholder="Enter a project name">
+                                                        <input type="text" id="title" name="title" class="form-control" placeholder="Enter a project name" required>
                                                     </div>
                                                     <div class="col-md-4">
-                                                      <input type="number" id="timeMonths" name="timeMonths" class="form-control" placeholder="Enter time in months">
+                                                        <input type="number" id="timeMonths" name="timeMonths" class="form-control" placeholder="Enter time in months" required>
                                                     </div>
                                                     <div class="col-md-4">
-                                                      <input type="number" id="price" name="price" class="form-control" placeholder="Enter price per month">
+                                                        <input type="number" id="price" name="price" class="form-control" placeholder="Enter price per month" required>
                                                     </div>
+                                                    
+                                                    <form class="row" action="/employee" method="get">
+                                                        <a href="#" id="openPopupLink" class="btn btn-primary">
+                                                            <i class="fas fa-user"></i> Add
+                                                        </a>
+                                                    </form>
+                                                    
+                                                    <div id="popupModal" class="modal">
+                                                        <div class="modal-content">
+                                                            <span class="close">&times;</span>
+                                                            <div class="col-md-2">
+                                                                <label>Employees:</label><br>
+                                                                <div id="employeeList"></div>
+                                                            </div>
+                                                            <!-- Botón de Guardar dentro del modal -->
+                                                            <a id="saveEmployeesButton" class="btn btn-success">Guardar</a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <script>
+                                                        // Función para cargar la lista de empleados
+                                                        function loadEmployeeList() {
+                                                            fetch('/employee')
+                                                                .then(response => response.json())
+                                                                .then(data => {
+                                                                    const employeeListContainer = document.getElementById('employeeList');
+                                                                    employeeListContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevos elementos
+                                                    
+                                                                    // Crear elementos de lista para cada empleado
+                                                                    data.forEach(employee => {
+                                                                        const employeeItem = document.createElement('div');
+                                                                        employeeItem.textContent = employee.name; // Suponiendo que cada objeto de empleado tiene una propiedad "name"
+                                                                        employeeListContainer.appendChild(employeeItem);
+                                                                    });
+                                                                })
+                                                                .catch(error => {
+                                                                    console.error('Error al cargar la lista de empleados:', error);
+                                                                });
+                                                        }
+                                                    
+                                                        // Cuando se hace clic en el botón "Add", cargar la lista de empleados y mostrar el modal
+                                                        document.getElementById('openPopupLink').addEventListener('click', function() {
+                                                            loadEmployeeList();
+                                                            document.getElementById('popupModal').style.display = 'block';
+                                                        });
+                                                    
+                                                        // Cuando se hace clic en la X, cerrar el modal
+                                                        document.getElementsByClassName('close')[0].addEventListener('click', function() {
+                                                            document.getElementById('popupModal').style.display = 'none';
+                                                        });
+                                                    
+                                                        // Cuando se hace clic fuera del modal, cerrar el modal
+                                                        window.addEventListener('click', function(event) {
+                                                            const modal = document.getElementById('popupModal');
+                                                            if (event.target == modal) {
+                                                                modal.style.display = 'none';
+                                                            }
+                                                        });
+                                                    
+                                                        // Función para mostrar la notificación (la función showNotification debe definirse)
+                                                        function showNotification(message) {
+                                                            // Tu código para mostrar la notificación
+                                                        }
+                                                    
+                                                        // Función para enviar el formulario (la función submitForm debe definirse)
+                                                        function submitForm() {
+                                                            // Tu código para enviar el formulario
+                                                        }
+                                                    </script>
+                                                    
+                                                    <!-- Contenedor para la notificación -->
+                                                    <div id="notificationContainer" style="display: none;">
+                                                        <div id="notification" class="notification">
+                                                            <span id="notificationClose">&times;</span>
+                                                            <p id="notificationMessage">Empleados guardados con éxito.</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <script>
+                                                        var openPopupLink = document.getElementById("openPopupLink");
+                                                        var modal = document.getElementById("popupModal");
+                                                        var saveEmployeesButton = document.getElementById("saveEmployeesButton");
+                                                        var notificationContainer = document.getElementById("notificationContainer");
+                                                        var notificationClose = document.getElementById("notificationClose");
+
+                                                        // Cuando se hace clic en el enlace, mostrar el modal
+                                                        openPopupLink.onclick = function() {
+                                                            modal.style.display = "block";
+                                                        }
+
+                                                        // Cuando se hace clic en el X, cerrar el modal
+                                                        var closeButtons = document.getElementsByClassName("close");
+                                                        for (var i = 0; i < closeButtons.length; i++) {
+                                                            closeButtons[i].onclick = function() {
+                                                                modal.style.display = "none";
+                                                            }
+                                                        }
+
+                                                        // Cuando se hace clic en el botón de Guardar, mostrar notificación
+                                                        saveEmployeesButton.onclick = function() {
+                                                            modal.style.display = "none"; // Cerrar el modal
+                                                            showNotification(); // Mostrar la notificación
+                                                        }
+
+                                                        // Mostrar la notificación
+                                                        function showNotification() {
+                                                            notificationContainer.style.display = "block";
+                                                            setTimeout(function() {
+                                                                notificationContainer.style.display = "none";
+                                                            }, 5000); // Ocultar la notificación después de 5 segundos
+                                                        }
+
+                                                        // Cuando se hace clic en el botón de cerrar la notificación
+                                                        notificationClose.onclick = function() {
+                                                            notificationContainer.style.display = "none";
+                                                        }
+
+                                                    </script>
+                                                    
                                                     <div class="col-md-2">
-                                                      <button type="submit" class="btn btn-success">Save</button>
+                                                        <button type="button" onclick="submitForm()" class="btn btn-success">Save</button>
                                                     </div>
-                                                  </form>
+                                                </form>
+                                                
+                                                <script>
+                                                    function submitForm() {
+                                                        var formData = new FormData(document.getElementById("projectForm"));
+                                                        var jsonData = {};
+
+                                                        // Convertir los datos del formulario en un objeto JSON
+                                                        formData.forEach(function(value, key) {
+                                                            // Si el campo ya existe en jsonData, lo convertimos en un array
+                                                            if (jsonData[key]) {
+                                                                if (!Array.isArray(jsonData[key])) {
+                                                                    jsonData[key] = [jsonData[key]];
+                                                                }
+                                                                jsonData[key].push(value);
+                                                            } else {
+                                                                jsonData[key] = value;
+                                                            }
+                                                        });
+
+                                                        // Enviar los datos como JSON utilizando Fetch API
+                                                        fetch("/add", {
+                                                            method: "POST",
+                                                            headers: {
+                                                                "Content-Type": "application/json"
+                                                            },
+                                                            body: JSON.stringify(jsonData)
+                                                        })
+                                                        .then(response => {
+                                                            if (response.ok) {
+                                                                console.log("Project saved successfully");
+                                                                // Recargar la página actual
+                                                                window.location.reload();
+                                                            } else {
+                                                                console.error("Failed to save project");
+                                                                // Puedes mostrar un mensaje de error aquí
+                                                            }
+                                                        })
+                                                        .catch(error => {
+                                                            console.error("Error:", error);
+                                                            // Puedes mostrar un mensaje de error aquí
+                                                        });
+                                                    }
+
+                                                </script>
+                                                
+                                                
                                                   <div class="table-responsive mt-4">
                                                     <table class="table table-striped">
                                                       <thead>

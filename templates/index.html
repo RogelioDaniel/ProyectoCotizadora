@@ -82,16 +82,18 @@
                   <i class="fas fa-fw fa-users"></i>
                   <span>Employees</span>
               </a>
-              <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                  data-parent="#accordionSidebar">
-                  <div class="bg-white py-2 collapse-inner rounded">
-                      <h6 class="collapse-header">Custom Utilities:</h6>
-                      <a class="collapse-item" href="utilities-color.html">Colors</a>
-                      <a class="collapse-item" href="utilities-border.html">Borders</a>
-                      <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                      <a class="collapse-item" href="utilities-other.html">Other</a>
-                  </div>
-              </div>
+              <form class="row" action="/add_employee" method="get"></form>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Operations API:</h6>
+                        <a class="collapse-item" href="{{ url_for('page_employee') }}">Create</a>
+                        <a class="collapse-item" href="/templates/utilities-border.html">Borders</a>
+                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                    </div>
+                </div>
+              </form>
           </li>
 
           <!-- Divider -->
@@ -757,85 +759,5 @@
   <script src="/templates/js/demo/chart-area-demo.js"></script>
   <script src="/templates/js/demo/chart-pie-demo.js"></script>
 
-</body>
-
-<body style="background-color: #8f8e8e;">
-
-
-<section class="vh-100" >
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-lg-10 col-xl-8">
-        <div class="card rounded-5">
-          <div class="card-body p-10">
-            <h4 class="text-center my-3 pb-3" style="font-family: 'Times New Roman', Times, serif;">Python FastAPI Project Prices Calculator</h4>
-            <form class="row" action="/add_employee" method="post">
-              <div class="col-4">
-                <div class="form-outline">
-                  <input style="font-family: 'Times New Roman', Times, serif;" type="text" id="first_name" name="first_name" class="form-control" placeholder="Enter a employee name"/>
-                </div>
-                <div class="form-outline">
-                  <input style="font-family: 'Times New Roman', Times, serif;" type="text" id="last_name" name="last_name" class="form-control" placeholder="Enter a employee last name"/>
-                </div>
-                <div class="form-outline">
-                  <input style="font-family: 'Times New Roman', Times, serif;" type="number" id="salary" name="salary" class="form-control" placeholder="Enter salary"/>
-                </div>
-              </div> 
-              <div class="col-2">
-                <button type="submit" class="btn btn-success" style="font-family: 'Times New Roman', Times, serif;">Save</button>
-              </div>
-            </form>
- 
-            <table class="table mb-4">
-                <thead>
-                    <tr>
-                      <th scope="col">No.</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Last Name</th>
-                      <th scope="col">Salary</th>
-                      <th scope="col">Rol</th>
-                      <th scope="col">Current Projects</th>
-                      <th scope="col">Total</th>
-                      <th scope="col">Methods</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for todo_e in todo_list_emp %}
-                    <tr>
-                      <th scope="row">{{todo_e.id }}</th>
-                      <td>{{ todo_e.first_name }}</td>     
-                      <th scope="row">{{todo_e.last_name}}</th>                      
-                      <td>
-                        {% if todo.status == False %}
-                        <div class="alert alert-secondary" role="alert">In progress</div>
-                        {% else %}
-                        <div class="alert alert-success" role="alert">Completed</div>
-                        {% endif %}
-                      </td>
-                      <td>{{ todo.timeMonths }}</td> 
-                      <td>{{ todo.price }}</td> 
-                      <td>{{ '${:.2f}'.format(todo.timeMonths * todo.price) }}</td>
-                      <td>
-                        {% if todo.left_time != 0 %}
-                        <a class="btn btn-success" href="/update/{{ todo.id }}">Update</a>
-                        {% endif %}
-                        <a class="btn btn-danger ms-1" href="/delete/{{ todo.id }}">Delete</a>
-                      </td>
-                      {% if todo.left_time != 0 %}
-                      <td>
-                        <a class="btn btn-info" href="/time/{{ todo.id }}">reload
-                        </a>
-                      </td>
-                      {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 </body>
 </html> 

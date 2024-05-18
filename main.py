@@ -1,19 +1,24 @@
-from fastapi import FastAPI, Request, Depends, Form, status
+from fastapi import FastAPI, Request, Depends, Form, status, APIRouter
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from database import get_db
-import models
 from database import engine
 from sqlalchemy.orm import Session
 from models import ToDo, ToDoEmployees
 from orm import add_todo,add_todo_employees,update_todo,delete_todo
 from starlette.responses import RedirectResponse
 from datetime import datetime
+import schema 
+import models
 
 app = FastAPI()
 app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 models.Base.metadata.create_all(bind=engine)
+router = APIRouter(
+    prefix='/posts',
+    tags=['Posts']
+)
 templates = Jinja2Templates("templates")
 async def homepage(request):
     return templates.TemplateResponse(request, 'index.html')
@@ -40,17 +45,18 @@ def page_employee(
     todos_employee = db.query(ToDoEmployees).all()
     return templates.TemplateResponse("employees.html",{"request":request,"todo_list_emp":todos_employee})
 
-@app.post("/add")
-def add(
-    request:Request,
-    db: Session=  Depends(get_db),
-    title:str = Form(...),
-    timeMonths:int = Form(...),
-    price:int = Form(...),
-):
-    add_todo(title,timeMonths,price,db)
+
+@app.post("/add",status_code=status.HTTP_201_CREATED)
+
+def add(post_post:schema.Project, db:Session = Depends(get_db)):
+
+    new_post = models.ToDo(**post_post.dict())
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
     url = app.url_path_for("todo_projects")
     return RedirectResponse(url,status_code=status.HTTP_303_SEE_OTHER)
+
 
 @app.post("/add_employee")
 def add_employee(

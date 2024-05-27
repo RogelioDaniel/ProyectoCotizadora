@@ -32,6 +32,7 @@ class ToDo(Base):
     timeMonths = Column(Integer,  nullable=True)
     price = Column(Integer, nullable=True)
     employee_in = Column(ARRAY(String),nullable=True)
+    needed_skills= Column(ARRAY(String),nullable=True)
 
 class ToDoEmployees(Base):
     __tablename__ = "employees"
@@ -41,6 +42,6 @@ class ToDoEmployees(Base):
     status = Column(Boolean,default=False)
     salary = Column(Integer)
     role = Column(String)
-    Column('skills',ARRAY(String))
-
+    skill = Column(ARRAY(String),nullable=True)
+    experience_time = Column(Integer)
 database = Database(SQLALCHEMY_DATABASE_URL)

@@ -20,5 +20,20 @@ class Project(BaseModel):
     left_time : Optional[int] = None
     price : int
     employee_in : List[str] = None
+    needed_skills: List[str] = None
+
     class Config:
         orm_mode = True
+
+class Employee(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    status: bool
+    salary: int
+    role: str
+    skill: List[str]
+    experience_time: int
+
+    class Config:
+        orm_mode = True        

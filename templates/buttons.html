@@ -454,19 +454,23 @@
                                                         <a href="#" id="openPopupLink" class="btn btn-primary">
                                                             <i class="fas fa-user"></i> Add
                                                         </a>
-                                                    </form>
-                                                    
-                                                    <div id="popupModal" class="modal">
-                                                        <div class="modal-content">
-                                                            <span class="close">&times;</span>
-                                                            <div class="col-md-2">
-                                                                <label>Employees:</label><br>
-                                                                <div id="employeeList"></div>
+                                                        <div id="popupModal" class="modal">
+                                                            <div class="modal-content">
+                                                                <span class="close">&times;</span>
+                                                                <div class="col-md-6">
+                                                                    <label>Employees:</label><br>
+                                                                    <div>
+                                                                        <input type="text" id="employee_in1" name="employee_in" class="form-control" placeholder="Employee 1">
+                                                                    </div>
+                                                                    <div>
+                                                                        <input type="text" id="employee_in2" name="employee_in" class="form-control" placeholder="Employee 2">
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Botón de Guardar dentro del modal -->
+                                                                <a id="saveEmployeesButton" class="btn btn-success">Guardar</a>
                                                             </div>
-                                                            <!-- Botón de Guardar dentro del modal -->
-                                                            <a id="saveEmployeesButton" class="btn btn-success">Guardar</a>
                                                         </div>
-                                                    </div>
+                                                    </form>
                                                     
                                                     <script>
                                                         // Función para cargar la lista de empleados
